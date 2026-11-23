@@ -1,0 +1,53 @@
+{
+  "rules": {
+    "users": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid",
+        ".validate": "newData.hasChildren(['email', 'lastLoginAt'])",
+        "name": { ".validate": "newData.isString() && newData.val().length <= 100" },
+        "email": { ".validate": "newData.isString() && newData.val().length <= 254" },
+        "photoURL": { ".validate": "newData.isString() && newData.val().length <= 2000" },
+        "provider": { ".validate": "newData.val() === 'password' || newData.val() === 'google'" },
+        "createdAt": { ".validate": "newData.isNumber() && (!data.exists() || data.val() === newData.val())" },
+        "lastLoginAt": { ".validate": "newData.isNumber()" },
+        "$other": { ".validate": false }
+      }
+    },
+    "saved": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid",
+        "$place": {
+          ".validate": "newData.hasChildren(['name', 'lat', 'lon', 'savedAt'])",
+          "name": { ".validate": "newData.isString() && newData.val().length <= 200" },
+          "lat": { ".validate": "newData.isNumber() && newData.val() >= -90 && newData.val() <= 90" },
+          "lon": { ".validate": "newData.isNumber() && newData.val() >= -180 && newData.val() <= 180" },
+          "kind": { ".validate": "newData.val() === 'hospital' || newData.val() === 'clinic'" },
+          "emergency": { ".validate": "newData.isBoolean()" },
+          "address": { ".validate": "newData.isString() && newData.val().length <= 300" },
+          "phone": { ".validate": "newData.isString() && newData.val().length <= 60" },
+          "website": { ".validate": "newData.isString() && newData.val().length <= 500" },
+          "osmId": { ".validate": "newData.isString() && newData.val().length <= 40" },
+          "savedAt": { ".validate": "newData.isNumber()" },
+          "$other": { ".validate": false }
+        }
+      }
+    },
+    "searches": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid",
+        ".indexOn": ["at"],
+        "$id": {
+          ".validate": "newData.hasChildren(['label', 'lat', 'lon', 'at'])",
+          "label": { ".validate": "newData.isString() && newData.val().length <= 120" },
+          "lat": { ".validate": "newData.isNumber() && newData.val() >= -90 && newData.val() <= 90" },
+          "lon": { ".validate": "newData.isNumber() && newData.val() >= -180 && newData.val() <= 180" },
+          "at": { ".validate": "newData.isNumber()" },
+          "$other": { ".validate": false }
+        }
+      }
+    }
+  }
+}
